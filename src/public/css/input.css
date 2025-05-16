@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme {
+    /* Primarios */
+    --color-primary: 40 100% 50%; /* Naranja vibrante (#FF6B00) - Para botones y acciones */
+    --color-primary-hover: 30 100% 45%; /* Naranja oscuro (#E05D00) - Hover */
+    --color-secondary: 210 20% 25%; /* Azul grisáceo (#3A4A5F) - Barras de navegación */
+    
+    /* Neutrales */
+    --color-light: 0 0% 98%; /* Blanco cálido (#FAFAFA) - Fondo */
+    --color-muted: 240 5% 90%; /* Gris claro (#E5E7EB) - Bordes y divisiones */
+    --color-dark: 240 10% 20%; /* Gris oscuro (#333A47) - Texto principal */
+    
+    /* Funcionales */
+    --color-success: 142 70% 45%; /* Verde (#10B981) - Confirmaciones */
+    --color-error: 0 80% 60%; /* Rojo (#EF4444) - Errores */
+    --color-warning: 42 90% 60%; /* Amarillo (#F59E0B) - Alertas */
+    
+    /* Extras (opcionales) */
+    --color-accent: 260 60% 60%; /* Morado (#8B5CF6) - Destacados */
+}
