@@ -5,10 +5,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/src/views');
 
-// ...aquí puedes agregar tus rutas...
-// En tu archivo de rutas o en app.js
-app.get('/', (req, res) => {
-    res.render('index', { titulo: 'Bienvenido a Librarium' });
-});
+// Importa las rutas
+const mainRoutes = require('./src/routes/main.routes');
+app.use('/', mainRoutes);
 
 module.exports = app;
