@@ -4,7 +4,7 @@ const app = express();
 
 // Configura EJS como motor de vistas
 app.set('view engine', 'ejs');
-app.set('views', 'c:/Users/danie/OneDrive/Desktop/Nueva carpeta/librarium/src/views');
+app.set('views', './src/views');
 app.use(expressLayouts);
 app.use(express.static(__dirname + '/src/public'));
 app.use(express.urlencoded({ extended: true }));
