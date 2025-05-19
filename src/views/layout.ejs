@@ -1,0 +1,15 @@
+<!-- filepath: c:\codename_\ADSO 2025\librarium\src\views\layout.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= titulo %></title>
+    <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-900">
+    <%- include('partials/header') %>
+    <main class="flex-grow">
+        <%- body %>
+    </main>
+    <%- include('partials/footer') %>
+</body>
+</html>

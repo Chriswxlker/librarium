@@ -1,10 +1,26 @@
-<!-- views/index.ejs -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title><%= titulo %></title>
-</head>
-<body>
-    <h1><%= encabezado %></h1>
-</body>
-</html>
+<!-- filepath: c:\codename_\ADSO 2025\librarium\src\views\index.ejs -->
+<main class="w-full bg-gray-900 text-gray-100">
+    <section class="w-full px-4 py-8 sm:px-6 sm:py-12">
+        <section class="text-center w-full max-w-2xl mx-auto">
+            <h1 class="text-3xl sm:text-5xl font-bold text-teal-400 mb-4">Librarium</h1>
+            <p class="text-base sm:text-xl text-gray-300 mb-8">La solución perfecta para gestionar tu biblioteca. Organiza, presta y disfruta de tus libros.</p>
+            <a href="/dashboard" class="inline-block bg-teal-500 hover:bg-teal-400 text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors duration-300 shadow-lg hover:shadow-teal-500/30">Ir al panel</a>
+        </section>
+        <section class="mt-12 w-full max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 flex flex-col items-center text-center hover:border-teal-400 transition-colors duration-300">
+                    <h3 class="text-lg sm:text-xl font-semibold text-teal-300 mb-2">📚 Catálogo</h3>
+                    <p class="text-gray-400 text-sm sm:text-base">Gestiona todos tus libros en un solo lugar.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 flex flex-col items-center text-center hover:border-teal-400 transition-colors duration-300">
+                    <h3 class="text-lg sm:text-xl font-semibold text-teal-300 mb-2">⏳ Préstamos</h3>
+                    <p class="text-gray-400 text-sm sm:text-base">Controla fechas y devoluciones fácilmente.</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 flex flex-col items-center text-center hover:border-teal-400 transition-colors duration-300">
+                    <h3 class="text-lg sm:text-xl font-semibold text-teal-300 mb-2">🔍 Búsqueda</h3>
+                    <p class="text-gray-400 text-sm sm:text-base">Encuentra cualquier libro en segundos.</p>
+                </div>
+            </div>
+        </section>
+    </section>
+</main>

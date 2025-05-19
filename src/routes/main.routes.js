@@ -3,15 +3,16 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     res.render('index', { 
-        titulo: 'Bienvenido a Librarium', 
-        encabezado: 'Página principal de Librarium'
+        titulo: 'Bienvenido a Librarium',
+        pagina: 'inicio'
     });
 });
 
 router.get('/dashboard', (req, res) => {
-    res.render('dashboard', {
+    res.render('dashboard', { 
         titulo: 'Dashboard',
-        encabezado: 'Dashboard de Librarium'
+        encabezado: 'Dashboard',
+        pagina: 'dashboard'
     });
 });
 
