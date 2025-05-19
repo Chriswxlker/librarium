@@ -1,9 +1,11 @@
 const express = require('express');
+const expressLayouts = require('express-ejs-layouts');
 const app = express();
 
 // Configura EJS como motor de vistas
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/src/views');
+app.use(expressLayouts);
 
 // Importa las rutas
 const mainRoutes = require('./src/routes/main.routes');
