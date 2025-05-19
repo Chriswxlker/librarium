@@ -7,9 +7,13 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/src/views');
 app.use(expressLayouts);
 app.use(express.static(__dirname + '/src/public'));
+app.use(express.urlencoded({ extended: true }));
 
 // Importa las rutas
 const mainRoutes = require('./src/routes/main.routes');
 app.use('/', mainRoutes);
+
+const authorsRoutes = require('./src/routes/authors.routes');
+app.use('/authors', authorsRoutes);
 
 module.exports = app;

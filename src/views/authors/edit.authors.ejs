@@ -1,0 +1,7 @@
+<h1>Editar autor</h1>
+<form action="/authors/edit/<%= author.id_author %>" method="POST">
+    <label for="name">Nombre:</label>
+    <input type="text" name="name" id="name" value="<%= author.name %>" required>
+    <button type="submit">Actualizar</button>
+</form>
+<a href="/authors">Volver</a>
