@@ -3,12 +3,12 @@ const Author = require('../models/author.model');
 // Listar autores
 exports.list = async (req, res) => {
     const authors = await Author.getAll();
-    res.render('authors/list.authors', { authors, pagina: 'dashboard' });
+    res.render('authors/list.ejs', { authors, pagina: 'dashboard', titulo: 'Listado de Autores' });
 };
 
 // Mostrar formulario de agregar
 exports.showAddForm = (req, res) => {
-    res.render('authors/add.authors', { pagina: 'dashboard' });
+    res.render('authors/add.ejs', { pagina: 'dashboard', titulo: 'Agregar Autor' });
 };
 
 // Agregar autor
@@ -21,7 +21,7 @@ exports.add = async (req, res) => {
 // Mostrar formulario de editar
 exports.showEditForm = async (req, res) => {
     const author = await Author.getById(req.params.id);
-    res.render('authors/edit.authors', { author, pagina: 'dashboard' });
+    res.render('authors/edit.ejs', { author, pagina: 'dashboard', titulo: 'Editar Autor' });
 };
 
 // Editar autor
