@@ -1,17 +1,23 @@
 const Author = require('../models/author.model');
 
-// Listar autores (HTML o JSON para AJAX, ahora con paginación)
+// Listar autores activos
 exports.list = async (req, res) => {
     const search = req.query.search || '';
-    const filterState = req.query.state ?? '';
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
-    const { authors, total } = await Author.getAll(search, filterState, page, limit);
+    const { authors, total } = await Author.getAll(search, '1', page, limit);
     const totalPages = Math.ceil(total / limit);
-    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-        return res.json({ authors, totalPages, page });
-    }
-    res.render('authors/list.ejs', { authors, pagina: 'dashboard', titulo: 'Listado de Autores', search, filterState, totalPages, page });
+    res.render('authors/list.ejs', { authors, pagina: 'dashboard', titulo: 'Listado de Autores', search, filterState: '', totalPages, page });
+};
+
+// Listar autores inactivos
+exports.listInactive = async (req, res) => {
+    const search = req.query.search || '';
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const { authors, total } = await Author.getAll(search, '0', page, limit);
+    const totalPages = Math.ceil(total / limit);
+    res.render('authors/inactive.ejs', { authors, pagina: 'dashboard', titulo: 'Autores Inactivos', search, totalPages, page });
 };
 
 // Mostrar formulario de agregar
@@ -37,6 +43,18 @@ exports.edit = async (req, res) => {
     const { name, state } = req.body;
     await Author.update(req.params.id, name, state);
     res.redirect('/authors');
+};
+
+// Desactivar autor
+exports.deactivate = async (req, res) => {
+    await Author.deactivate(req.params.id);
+    res.redirect('/authors');
+};
+
+// Activar autor
+exports.activate = async (req, res) => {
+    await Author.activate(req.params.id);
+    res.redirect('/authors/inactive');
 };
 
 // Eliminar autor

@@ -1,7 +1,7 @@
 const pool = require('../database/connection');
 
-// Obtener todos los autores (ahora acepta filtros y paginación)
-exports.getAll = async (search = '', state = '', page = 1, limit = 10) => {
+// Obtener todos los autores (ahora solo activos por defecto, y opción para inactivos)
+exports.getAll = async (search = '', state = '1', page = 1, limit = 10) => {
     let query = 'SELECT * FROM authors WHERE 1=1';
     let countQuery = 'SELECT COUNT(*) as total FROM authors WHERE 1=1';
     const params = [];
@@ -45,4 +45,14 @@ exports.update = async (id, name, state) => {
 // Eliminar un autor
 exports.delete = async (id) => {
     await pool.query('DELETE FROM authors WHERE id_author = ?', [id]);
+};
+
+// Desactivar autor (soft delete)
+exports.deactivate = async (id) => {
+    await pool.query('UPDATE authors SET state = 0 WHERE id_author = ?', [id]);
+};
+
+// Activar autor
+exports.activate = async (id) => {
+    await pool.query('UPDATE authors SET state = 1 WHERE id_author = ?', [id]);
 };

@@ -1,41 +1,29 @@
 <main class="w-full bg-gray-900 text-gray-100 min-h-screen">
     <section class="max-w-6xl mx-auto px-4 py-8">
-        <!-- Encabezado y controles de búsqueda -->
-        <div>
-            <h1 class="text-3xl font-bold text-teal-400 mb-2">Autores</h1>
-            <p class="text-gray-400">Gestión completa del catálogo de autores</p>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-teal-400 mb-2">Autores Inactivos</h1>
+                <p class="text-gray-400">Autores desactivados. Puedes reactivarlos aquí.</p>
+            </div>
         </div>
-
-        <!-- Barra de acciones -->
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
             <div class="text-sm text-gray-400">
-                Mostrando <%= authors.length %> autores
+                Mostrando <%= authors.length %> autores inactivos
             </div>
             <div class="flex gap-3">
                 <a 
-                    href="/authors/inactive" 
+                    href="/authors" 
                     class="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.293 9.293a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L13 12.414V17a1 1 0 11-2 0v-4.586l-3.293 3.293a1 1 0 01-1.414-1.414l4-4z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                     </svg>
-                    Recuperar
-                </a>
-                <a 
-                    href="/authors/add" 
-                    class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                    Agregar autor
+                    Volver a lista
                 </a>
             </div>
         </div>
-
-        <!-- Tabla de autores -->
         <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg overflow-x-auto">
-            <table class="w-full min-w-max" id="authors-table">
+            <table class="w-full min-w-max" id="authors-inactive-table">
                 <thead class="border-b border-gray-700">
                     <tr class="text-left">
                         <th class="py-3 px-4 text-teal-300 font-semibold w-20">ID</th>
@@ -44,39 +32,30 @@
                         <th class="py-3 px-4 text-teal-300 font-semibold text-right w-48">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="authors-tbody">
+                <tbody id="authors-inactive-tbody">
                     <% authors.forEach(author => { %>
                         <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
                             <td class="py-4 px-4"><%= author.id_author %></td>
                             <td class="py-4 px-4 font-medium"><%= author.name %></td>
                             <td class="py-4 px-4">
-                                <span class="inline-flex items-center gap-1 <%= author.state == 1 ? 'text-green-400' : 'text-red-400' %>">
+                                <span class="inline-flex items-center gap-1 text-red-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                     </svg>
-                                    <%= author.state == 1 ? 'Activo' : 'Inactivo' %>
+                                    Inactivo
                                 </span>
                             </td>
                             <td class="py-4 px-4 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <a 
-                                        href="/authors/edit/<%= author.id_author %>" 
-                                        class="inline-flex items-center gap-1 bg-teal-600/80 hover:bg-teal-500 text-gray-900 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                        </svg>
-                                        Editar
-                                    </a>
-                                    <form action="/authors/deactivate/<%= author.id_author %>" method="POST" class="inline-block">
+                                    <form action="/authors/activate/<%= author.id_author %>" method="POST" class="inline-block">
                                         <button 
                                             type="submit" 
-                                            class="inline-flex items-center gap-1 bg-gray-700 hover:bg-red-700 text-gray-300 hover:text-gray-100 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm"
+                                            class="inline-flex items-center gap-1 bg-teal-600 hover:bg-teal-500 text-gray-900 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                             </svg>
-                                            Desactivar
+                                            Activar
                                         </button>
                                     </form>
                                 </div>
@@ -85,14 +64,12 @@
                     <% }) %>
                 </tbody>
             </table>
-            
-            <!-- Paginación -->
             <% if (totalPages > 1) { %>
                 <div class="flex justify-between items-center mt-8">
                     <div>
                         <% if (page > 1) { %>
                             <a 
-                                href="/authors?page=<%= page-1 %><%= search ? '&search=' + search : '' %><%= filterState ? '&state=' + filterState : '' %>" 
+                                href="/authors/inactive?page=<%= page-1 %><%= search ? '&search=' + search : '' %>" 
                                 class="inline-flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-md transition-colors"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -109,14 +86,13 @@
                             </span>
                         <% } %>
                     </div>
-                    
                     <div class="flex gap-1">
                         <% for (let i = 1; i <= totalPages; i++) { %>
                             <% if (i === page) { %>
                                 <span class="px-4 py-2 bg-teal-600 text-white rounded-md"><%= i %></span>
                             <% } else if (i === 1 || i === totalPages || (i >= page-2 && i <= page+2)) { %>
                                 <a 
-                                    href="/authors?page=<%= i %><%= search ? '&search=' + search : '' %><%= filterState ? '&state=' + filterState : '' %>" 
+                                    href="/authors/inactive?page=<%= i %><%= search ? '&search=' + search : '' %>" 
                                     class="px-4 py-2 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-md transition-colors"
                                 >
                                     <%= i %>
@@ -126,11 +102,10 @@
                             <% } %>
                         <% } %>
                     </div>
-                    
                     <div>
                         <% if (page < totalPages) { %>
                             <a 
-                                href="/authors?page=<%= page+1 %><%= search ? '&search=' + search : '' %><%= filterState ? '&state=' + filterState : '' %>" 
+                                href="/authors/inactive?page=<%= page+1 %><%= search ? '&search=' + search : '' %>" 
                                 class="inline-flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-md transition-colors"
                             >
                                 Siguiente
@@ -152,13 +127,11 @@
         </div>
     </section>
 </main>
-
 <script>
     window.pageData = {
         page: <%- JSON.stringify(typeof page !== 'undefined' ? page : 1) %>,
         totalPages: <%- JSON.stringify(typeof totalPages !== 'undefined' ? totalPages : 1) %>,
-        search: "<%= search || '' %>",
-        filterState: "<%= filterState || '' %>"
+        search: "<%= search || '' %>"
     };
 </script>
 <script src="/js/authors/authors-list.js"></script>
