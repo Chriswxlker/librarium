@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.querySelector('input[name="search"]');
-    const stateSelect = document.querySelector('select[name="state"]');
-    const form = searchInput.closest('form');
+    const form = document.getElementById('authors-search-form');
+    const searchInput = form.querySelector('input[name="search"]');
+    const stateSelect = form.querySelector('select[name="state"]');
     const tbody = document.getElementById('authors-tbody');
     const paginationDiv = document.getElementById('pagination');
     let debounceTimeout;
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderPagination(page, totalPages) {
+        if (!paginationDiv) return;
         let html = '';
         html += `<button type="button" class="px-3 py-1 rounded ${page === 1 ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-teal-600 text-gray-900 hover:bg-teal-500'}" ${page === 1 ? 'disabled' : ''} data-page="${page - 1}">Anterior</button>`;
         let start = Math.max(1, page - 2);
@@ -73,6 +74,10 @@ document.addEventListener('DOMContentLoaded', function() {
         debounceTimeout = setTimeout(() => fetchAuthors(1), 400);
     });
     stateSelect.addEventListener('change', function() {
+        fetchAuthors(1);
+    });
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
         fetchAuthors(1);
     });
 
