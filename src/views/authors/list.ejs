@@ -1,24 +1,42 @@
 <main class="w-full bg-gray-900 text-gray-100">
     <section class="max-w-6xl mx-auto px-4 py-12">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-teal-400">Autores</h1>
+        <h1 class="text-3xl font-bold text-teal-400">Autores</h1>
+        <form method="get" action="/authors" class="flex flex-col sm:flex-row gap-4 mb-8 items-center justify-between">
+            <div class="flex gap-2 w-full sm:w-auto">
+                <input type="text" name="search" placeholder="Buscar por nombre..." value="<%= search %>" class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent w-full sm:w-64" />
+                <select name="state" class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                    <option value="" <%= filterState === '' ? 'selected' : '' %>>Todos</option>
+                    <option value="1" <%= filterState == '1' ? 'selected' : '' %>>Activos</option>
+                    <option value="0" <%= filterState == '0' ? 'selected' : '' %>>Inactivos</option>
+                </select>
+            </div>
+            <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">Buscar</button>
+        </form>
+        <div class="flex justify-end items-center mb-8 gap-2.5">
+            <a href="/dashboard" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">Regresar</a>
             <a href="/authors/add" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">Agregar autor</a>
         </div>
         
         <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg">
-            <table class="w-full">
+            <table class="w-full" id="authors-table">
                 <thead class="border-b border-gray-700">
                     <tr>
                         <th class="py-3 text-left text-teal-300 font-semibold">ID</th>
                         <th class="py-3 text-left text-teal-300 font-semibold">Nombre</th>
+                        <th class="py-3 text-left text-teal-300 font-semibold">Estado</th>
                         <th class="py-3 text-right text-teal-300 font-semibold">Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="authors-tbody">
                     <% authors.forEach(author => { %>
                         <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
                             <td class="py-3"><%= author.id_author %></td>
                             <td class="py-3"><%= author.name %></td>
+                            <td class="py-3">
+                                <span class="<%= author.state == 1 ? 'text-green-400' : 'text-red-400' %>">
+                                    <%= author.state == 1 ? 'Activo' : 'Inactivo' %>
+                                </span>
+                            </td>
                             <td class="py-3 text-right">
                                 <a href="/authors/edit/<%= author.id_author %>" class="inline-block bg-teal-600/80 hover:bg-teal-500 text-gray-900 font-medium py-1 px-4 rounded-md transition-colors duration-300 mr-2">Editar</a>
                                 <form action="/authors/delete/<%= author.id_author %>" method="POST" class="inline-block">
@@ -29,6 +47,88 @@
                     <% }) %>
                 </tbody>
             </table>
+            <div id="pagination" class="flex justify-center items-center gap-2 mt-6"></div>
         </div>
     </section>
+    <script>
+        const searchInput = document.querySelector('input[name="search"]');
+        const stateSelect = document.querySelector('select[name="state"]');
+        const form = searchInput.closest('form');
+        const tbody = document.getElementById('authors-tbody');
+        const paginationDiv = document.getElementById('pagination');
+        let debounceTimeout;
+        let currentPage = <%= typeof page !== 'undefined' ? page : 1 %>;
+        let totalPages = <%= typeof totalPages !== 'undefined' ? totalPages : 1 %>;
+
+        function renderRows(authors) {
+            tbody.innerHTML = authors.map(author => `
+                <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                    <td class="py-3">${author.id_author}</td>
+                    <td class="py-3">${author.name}</td>
+                    <td class="py-3">
+                        <span class="${author.state == 1 ? 'text-green-400' : 'text-red-400'}">
+                            ${author.state == 1 ? 'Activo' : 'Inactivo'}
+                        </span>
+                    </td>
+                    <td class="py-3 text-right">
+                        <a href="/authors/edit/${author.id_author}" class="inline-block bg-teal-600/80 hover:bg-teal-500 text-gray-900 font-medium py-1 px-4 rounded-md transition-colors duration-300 mr-2">Editar</a>
+                        <form action="/authors/delete/${author.id_author}" method="POST" class="inline-block">
+                            <button type="submit" class="bg-gray-700 hover:bg-red-700 text-gray-300 hover:text-gray-100 font-medium py-1 px-4 rounded-md transition-colors duration-300">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination(page, totalPages) {
+            let html = '';
+            html += `<button type="button" class="px-3 py-1 rounded ${page === 1 ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-teal-600 text-gray-900 hover:bg-teal-500'}" ${page === 1 ? 'disabled' : ''} data-page="${page - 1}">Anterior</button>`;
+            let start = Math.max(1, page - 2);
+            let end = Math.min(totalPages, page + 2);
+            if (start > 1) html += `<span class="px-2">...</span>`;
+            for (let i = start; i <= end; i++) {
+                html += `<button type="button" class="px-3 py-1 rounded ${i === page ? 'bg-teal-600 text-white font-bold' : 'bg-gray-700 text-gray-100 hover:bg-teal-500'}" data-page="${i}">${i}</button>`;
+            }
+            if (end < totalPages) html += `<span class="px-2">...</span>`;
+            html += `<button type="button" class="px-3 py-1 rounded ${page === totalPages ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-teal-600 text-gray-900 hover:bg-teal-500'}" ${page === totalPages ? 'disabled' : ''} data-page="${page + 1}">Siguiente</button>`;
+            paginationDiv.innerHTML = html;
+            // Eventos
+            paginationDiv.querySelectorAll('button[data-page]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const newPage = parseInt(this.getAttribute('data-page'));
+                    if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
+                        goToPage(newPage);
+                    }
+                });
+            });
+        }
+
+        function fetchAuthors(page = 1) {
+            const params = new URLSearchParams(new FormData(form));
+            params.set('page', page);
+            fetch(`/authors?${params.toString()}`, { headers: { 'Accept': 'application/json' } })
+                .then(res => res.json())
+                .then(data => {
+                    renderRows(data.authors);
+                    renderPagination(data.page, data.totalPages);
+                    currentPage = data.page;
+                    totalPages = data.totalPages;
+                });
+        }
+
+        function goToPage(page) {
+            fetchAuthors(page);
+        }
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => fetchAuthors(1), 400);
+        });
+        stateSelect.addEventListener('change', function() {
+            fetchAuthors(1);
+        });
+
+        // Inicializar paginación al cargar
+        renderPagination(currentPage, totalPages);
+    </script>
 </main>

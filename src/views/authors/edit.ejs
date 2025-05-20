@@ -18,6 +18,14 @@
                     >
                 </div>
                 
+                <div>
+                    <label for="state" class="block text-teal-300 font-medium mb-2">Estado:</label>
+                    <select name="state" id="state" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                        <option value="1" <%= author.state == 1 ? 'selected' : '' %>>Activo</option>
+                        <option value="0" <%= author.state == 0 ? 'selected' : '' %>>Inactivo</option>
+                    </select>
+                </div>
+                
                 <div class="flex justify-between mt-8">
                     <a href="/authors" class="inline-block bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2 px-6 rounded-lg transition-colors duration-300">
                         Volver
