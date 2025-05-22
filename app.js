@@ -22,4 +22,7 @@ app.use('/publishers', publishersRoutes);
 const categoriesRoutes = require('./src/routes/categories.routes');
 app.use('/categories', categoriesRoutes);
 
+const booksRoutes = require('./src/routes/books.routes');
+app.use('/books', booksRoutes);
+
 module.exports = app;
