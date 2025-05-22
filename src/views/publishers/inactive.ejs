@@ -1,0 +1,111 @@
+<main class="w-full bg-gray-900 text-gray-100 min-h-screen">
+    <section class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Encabezado -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-teal-400 mb-2">Editoriales Inactivas</h1>
+            <p class="text-gray-400">Total: <%= typeof total !== 'undefined' ? total : publishers.length %> editoriales inactivas</p>
+        </div>
+
+        <!-- Barra de acciones -->
+        <div class="mb-6">
+            <a 
+                href="/publishers" 
+                class="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Volver a lista
+            </a>
+        </div>
+
+        <!-- Tabla de editoriales inactivas -->
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg overflow-x-auto">
+            <table class="w-full min-w-max" id="publishers-inactive-table">
+                <thead class="border-b border-gray-700">
+                    <tr class="text-left">
+                        <th class="py-3 px-4 text-teal-300 font-semibold w-20">ID</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold">Nombre</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold w-32">Estado</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold text-right w-48">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="publishers-inactive-tbody">
+                    <% publishers.forEach(publisher => { %>
+                        <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                            <td class="py-4 px-4"><%= publisher.id_publisher %></td>
+                            <td class="py-4 px-4 font-medium"><%= publisher.name %></td>
+                            <td class="py-4 px-4">
+                                <span class="inline-flex items-center gap-1 text-red-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    Inactivo
+                                </span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex justify-end gap-2">
+                                    <form action="/publishers/activate/<%= publisher.id_publisher %>" method="POST" class="inline-block">
+                                        <button 
+                                            type="submit" 
+                                            class="inline-flex items-center gap-1 bg-teal-600/80 hover:bg-teal-500 text-gray-900 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            Activar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+            <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+                <!-- Paginación -->
+                <div id="pagination" class="flex justify-center items-center gap-2 mt-6">
+                    <% if (page > 1) { %>
+                        <button type="button" data-page="<%= page - 1 %>" class="px-3 py-1 rounded bg-teal-600 text-gray-900 hover:bg-teal-500">Anterior</button>
+                    <% } %>
+
+                    <% 
+                    let start = Math.max(1, page - 2);
+                    let end = Math.min(totalPages, page + 2);
+                    if (start > 1) { %>
+                        <span class="px-2">...</span>
+                    <% } %>
+
+                    <% for(let i = start; i <= end; i++) { %>
+                        <button 
+                            type="button" 
+                            data-page="<%= i %>"
+                            class="px-3 py-1 rounded <%= i === page ? 'bg-teal-600 font-bold' : 'bg-gray-700 text-gray-100 hover:bg-teal-500' %>"
+                        >
+                            <%= i %>
+                        </button>
+                    <% } %>
+
+                    <% if (end < totalPages) { %>
+                        <span class="px-2">...</span>
+                    <% } %>
+
+                    <% if (page < totalPages) { %>
+                        <button type="button" data-page="<%= page + 1 %>" class="px-3 py-1 rounded bg-teal-600 text-gray-900 hover:bg-teal-500">Siguiente</button>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+    </section>
+</main>
+
+<script>
+    window.pageData = {
+        page: <%- JSON.stringify(typeof page !== 'undefined' ? page : 1) %>,
+        totalPages: <%- JSON.stringify(typeof totalPages !== 'undefined' ? totalPages : 1) %>,
+        search: "<%= search || '' %>",
+        filterState: "<%= filterState || '' %>"
+    };
+</script>
+<script src="/js/publishers/publishers-list.js"></script>

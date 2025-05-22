@@ -16,4 +16,7 @@ app.use('/', mainRoutes);
 const authorsRoutes = require('./src/routes/authors.routes');
 app.use('/authors', authorsRoutes);
 
+const publishersRoutes = require('./src/routes/publishers.routes');
+app.use('/publishers', publishersRoutes);
+
 module.exports = app;

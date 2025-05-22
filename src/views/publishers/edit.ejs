@@ -1,0 +1,30 @@
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-semibold text-gray-100">Editar Editorial</h1>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl shadow-lg p-6">
+            <form action="/publishers/edit/<%= publisher.id_publisher %>" method="POST" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-300 mb-2">
+                        Nombre
+                    </label>
+                    <input type="text" 
+                           name="name" 
+                           id="name" 
+                           value="<%= publisher.name %>"
+                           required 
+                           class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500">
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" 
+                            class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-500 transition-colors">
+                        Actualizar Editorial
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
