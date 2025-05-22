@@ -1,0 +1,112 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Detectar si estamos en la vista de inactivos o activos
+    const isInactive = !!document.getElementById('categories-inactive-table');
+    const tbody = document.getElementById(isInactive ? 'categories-inactive-tbody' : 'categories-tbody');
+    let paginationDiv = document.getElementById('pagination');
+    let currentPage = window.pageData?.page || 1;
+    let totalPages = window.pageData?.totalPages || 1;
+
+    if (!tbody) return;
+
+    function renderRows(categories) {
+        tbody.innerHTML = categories.map(category => {
+            if (isInactive) {
+                return `
+                <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                    <td class="py-4 px-4">${category.id_category}</td>
+                    <td class="py-4 px-4 font-medium">${category.name}</td>
+                    <td class="py-4 px-4">
+                        <span class="inline-flex items-center gap-1 text-red-400">
+                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\" /></svg>
+                            Inactivo
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        <div class="flex justify-end gap-2">
+                            <form action="/categories/activate/${category.id_category}" method="POST" class="inline-block">
+                                <button type="submit" class="inline-flex items-center gap-1 bg-teal-600 hover:bg-teal-500 text-gray-900 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                    <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\" /></svg>
+                                    Activar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            } else {
+                return `
+                <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                    <td class="py-4 px-4">${category.id_category}</td>
+                    <td class="py-4 px-4 font-medium">${category.name}</td>
+                    <td class="py-4 px-4">
+                        <span class="inline-flex items-center gap-1 text-green-400">
+                            <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z\" clip-rule=\"evenodd\" /></svg>
+                            Activo
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-right">
+                        <div class="flex justify-end gap-2">
+                            <a href="/categories/edit/${category.id_category}" class="inline-flex items-center gap-1 bg-teal-600/80 hover:bg-teal-500 text-gray-900 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path d=\"M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z\" /></svg>
+                                Editar
+                            </a>
+                            <form action="/categories/deactivate/${category.id_category}" method="POST" class="inline-block">
+                                <button type="submit" class="inline-flex items-center gap-1 bg-gray-700 hover:bg-red-700 text-gray-300 hover:text-gray-100 font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                    <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z\" clip-rule=\"evenodd\" /></svg>
+                                    Desactivar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }
+        }).join('');
+    }
+
+    function renderPagination(page, totalPages) {
+        if (!paginationDiv) {
+            paginationDiv = document.createElement('div');
+            paginationDiv.id = 'pagination';
+            paginationDiv.className = 'flex justify-center items-center gap-2 mt-6';
+            tbody.parentElement.appendChild(paginationDiv);
+        }
+        let html = '';
+        html += `<button type="button" class="px-3 py-1 rounded ${page === 1 ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-teal-600 text-gray-900 hover:bg-teal-500'}" ${page === 1 ? 'disabled' : ''} data-page="${page - 1}">Anterior</button>`;
+        let start = Math.max(1, page - 2);
+        let end = Math.min(totalPages, page + 2);
+        if (start > 1) html += `<span class="px-2">...</span>`;
+        for (let i = start; i <= end; i++) {
+            html += `<button type="button" class="px-3 py-1 rounded ${i === page ? 'bg-teal-600 text-white font-bold' : 'bg-gray-700 text-gray-100 hover:bg-teal-500'}" data-page="${i}">${i}</button>`;
+        }
+        if (end < totalPages) html += `<span class="px-2">...</span>`;
+        html += `<button type="button" class="px-3 py-1 rounded ${page === totalPages ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-teal-600 text-gray-900 hover:bg-teal-500'}" ${page === totalPages ? 'disabled' : ''} data-page="${page + 1}">Siguiente</button>`;
+        paginationDiv.innerHTML = html;
+        paginationDiv.querySelectorAll('button[data-page]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const newPage = parseInt(this.getAttribute('data-page'));
+                if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
+                    fetchCategories(newPage);
+                }
+            });
+        });
+    }
+
+    function fetchCategories(page = 1) {
+        let url = isInactive ? `/categories/inactive?page=${page}` : `/categories?page=${page}`;
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+            .then(res => res.json())
+            .then(data => {
+                renderRows(data.categories);
+                renderPagination(data.page, data.totalPages);
+                currentPage = data.page;
+                totalPages = data.totalPages;
+            });
+    }
+
+    // Inicializar paginación dinámica
+    renderPagination(currentPage, totalPages);
+
+    // Listeners de paginación
+    // (ya están incluidos en renderPagination)
+});

@@ -19,4 +19,7 @@ app.use('/authors', authorsRoutes);
 const publishersRoutes = require('./src/routes/publishers.routes');
 app.use('/publishers', publishersRoutes);
 
+const categoriesRoutes = require('./src/routes/categories.routes');
+app.use('/categories', categoriesRoutes);
+
 module.exports = app;

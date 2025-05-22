@@ -6,24 +6,20 @@ exports.getAll = async (search = '', state = '1', page = 1, limit = 10) => {
     let countQuery = 'SELECT COUNT(*) as total FROM publishers WHERE 1=1';
     const params = [];
     const countParams = [];
-
     if (search) {
         query += ' AND name LIKE ?';
         countQuery += ' AND name LIKE ?';
         params.push(`%${search}%`);
         countParams.push(`%${search}%`);
     }
-
     if (state !== '') {
         query += ' AND state = ?';
         countQuery += ' AND state = ?';
         params.push(state);
         countParams.push(state);
     }
-
     query += ' ORDER BY id_publisher DESC LIMIT ? OFFSET ?';
     params.push(Number(limit), (Number(page) - 1) * Number(limit));
-
     const [rows] = await pool.query(query, params);
     const [countRows] = await pool.query(countQuery, countParams);
     return { publishers: rows, total: countRows[0].total };
