@@ -2,12 +2,16 @@
 <header class="bg-gray-950 text-gray-100 shadow-lg border-b border-gray-800">
     <nav class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold text-teal-400 hover:text-teal-300 transition-colors duration-300">Librarium</a>
-            <div class="hidden md:flex space-x-6">                <% if (pagina === 'inicio') { %>
-                    <a href="#" class="text-gray-300 hover:text-teal-400 transition-colors duration-300 font-medium">Ingresar</a>
-                    <a href="#" class="bg-teal-600 hover:bg-teal-500 text-gray-900 font-medium py-2 px-4 rounded-md transition-colors duration-300">Registrarse</a>
+            <a href="<%= user ? '/dashboard' : '/' %>" class="text-2xl font-bold text-teal-400 hover:text-teal-300 transition-colors duration-300">Librarium</a>
+            <div class="hidden md:flex space-x-6">
+                <% if (!user) { %>
+                    <!-- Solo mostrar si NO hay usuario autenticado -->
+                    <a href="/login" class="text-gray-300 hover:text-teal-400 transition-colors duration-300 font-medium">Ingresar</a>
+                    <a href="/register" class="bg-teal-600 hover:bg-teal-500 text-gray-900 font-medium py-2 px-4 rounded-md transition-colors duration-300">Registrarse</a>
                 <% } else { %>
-                    <a href="/" class="text-gray-300 hover:text-teal-400 transition-colors duration-300 font-medium">Inicio</a>
+                    <span class="text-gray-400 mr-2">Hola, <%= user.name %></span>
+                    <a href="/dashboard" class="text-gray-300 hover:text-teal-400 transition-colors duration-300 font-medium">Dashboard</a>
+                    <a href="/logout" class="bg-red-600 hover:bg-red-500 text-gray-100 font-medium py-2 px-4 rounded-md transition-colors duration-300">Cerrar sesión</a>
                 <% } %>
             </div>
         </div>

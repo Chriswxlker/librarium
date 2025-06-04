@@ -1,13 +1,17 @@
 <main class="w-full bg-gray-900 text-gray-100">
     <section class="max-w-6xl mx-auto px-4 py-12">
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-teal-400 mb-6">Editar autor</h1>
+            <h1 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <i class="fas fa-edit"></i> Editar autor
+            </h1>
         </div>
         
         <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 shadow-lg max-w-2xl mx-auto">
             <form action="/authors/edit/<%= author.id_author %>" method="POST" class="space-y-6">
                 <div>
-                    <label for="name" class="block text-teal-300 font-medium mb-2">Nombre:</label>
+                    <label for="name" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-user-edit"></i> Nombre:
+                    </label>
                     <input 
                         type="text" 
                         name="name" 

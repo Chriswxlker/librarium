@@ -1,16 +1,22 @@
 <main class="w-full bg-gray-900 text-gray-100 min-h-screen">
     <section class="max-w-xl mx-auto px-4 py-12">
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-teal-400 mb-6">Agregar Libro</h1>
+            <h1 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <i class="fas fa-plus"></i> Agregar Libro
+            </h1>
         </div>
         <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 shadow-lg">
             <form action="/books/add" method="POST" class="space-y-6">
                 <div>
-                    <label for="name" class="block text-teal-300 font-medium mb-2">Nombre:</label>
+                    <label for="name" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-book"></i> Nombre:
+                    </label>
                     <input type="text" name="name" id="name" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                 </div>
                 <div>
-                    <label for="id_author" class="block text-teal-300 font-medium mb-2">Autor:</label>
+                    <label for="id_author" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-user-edit"></i> Autor:
+                    </label>
                     <select name="id_author" id="id_author" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                         <option value="">Seleccione un autor</option>
                         <% authors.forEach(author => { %>
@@ -19,21 +25,29 @@
                     </select>
                 </div>
                 <div>
-                    <label for="isbn" class="block text-teal-300 font-medium mb-2">ISBN:</label>
+                    <label for="isbn" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-barcode"></i> ISBN:
+                    </label>
                     <input type="text" name="isbn" id="isbn" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                 </div>
                 <div class="flex gap-4">
                     <div class="w-1/2">
-                        <label for="year_published" class="block text-teal-300 font-medium mb-2">Año de publicación:</label>
+                        <label for="year_published" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                            <i class="fas fa-calendar-alt"></i> Año de publicación:
+                        </label>
                         <input type="number" name="year_published" id="year_published" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                     </div>
                     <div class="w-1/2">
-                        <label for="num_pages" class="block text-teal-300 font-medium mb-2">Páginas:</label>
+                        <label for="num_pages" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                            <i class="fas fa-file-alt"></i> Páginas:
+                        </label>
                         <input type="number" name="num_pages" id="num_pages" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                     </div>
                 </div>
                 <div>
-                    <label for="id_category" class="block text-teal-300 font-medium mb-2">Categoría:</label>
+                    <label for="id_category" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-tags"></i> Categoría:
+                    </label>
                     <select name="id_category" id="id_category" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                         <option value="">Seleccione una categoría</option>
                         <% categories.forEach(category => { %>
@@ -42,7 +56,9 @@
                     </select>
                 </div>
                 <div>
-                    <label for="id_publisher" class="block text-teal-300 font-medium mb-2">Editorial:</label>
+                    <label for="id_publisher" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-building"></i> Editorial:
+                    </label>
                     <select name="id_publisher" id="id_publisher" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                         <option value="">Seleccione una editorial</option>
                         <% publishers.forEach(publisher => { %>

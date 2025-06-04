@@ -2,7 +2,9 @@
     <section class="max-w-6xl mx-auto px-4 py-8">
         <!-- Encabezado y controles de búsqueda -->
         <div>
-            <h1 class="text-3xl font-bold text-teal-400 mb-2">Autores</h1>
+            <h1 class="text-3xl font-bold text-teal-400 mb-2 flex items-center gap-2">
+                <i class="fas fa-user-edit"></i> Autores
+            </h1>
             <p class="text-gray-400">Gestión completa del catálogo de autores</p>
         </div>
 
@@ -16,19 +18,13 @@
                     href="/authors/inactive" 
                     class="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.293 9.293a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L13 12.414V17a1 1 0 11-2 0v-4.586l-3.293 3.293a1 1 0 01-1.414-1.414l4-4z" clip-rule="evenodd" />
-                    </svg>
-                    Recuperar
+                    <i class="fas fa-archive"></i> Recuperar
                 </a>
                 <a 
                     href="/authors/add" 
                     class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                    Agregar autor
+                    <i class="fas fa-plus"></i> Agregar autor
                 </a>
             </div>
         </div>
@@ -38,10 +34,10 @@
             <table class="w-full min-w-max" id="authors-table">
                 <thead class="border-b border-gray-700">
                     <tr class="text-left">
-                        <th class="py-3 px-4 text-teal-300 font-semibold w-20">ID</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Nombre</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold w-32">Estado</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold text-right w-48">Acciones</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold w-20"><i class="fas fa-hashtag"></i> ID</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-user-edit"></i> Nombre</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold w-32"><i class="fas fa-toggle-on"></i> Estado</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold text-right w-48"><i class="fas fa-cogs"></i> Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="authors-tbody">

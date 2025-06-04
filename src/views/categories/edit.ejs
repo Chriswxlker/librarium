@@ -1,12 +1,16 @@
 <main class="w-full bg-gray-900 text-gray-100 min-h-screen">
     <section class="max-w-xl mx-auto px-4 py-12">
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-teal-400 mb-6">Editar Categoría</h1>
+            <h1 class="text-3xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                <i class="fas fa-edit"></i> Editar Categoría
+            </h1>
         </div>
         <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 shadow-lg">
             <form action="/categories/edit/<%= category.id_category %>" method="POST" class="space-y-6">
                 <div>
-                    <label for="name" class="block text-teal-300 font-medium mb-2">Nombre:</label>
+                    <label for="name" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                        <i class="fas fa-tags"></i> Nombre:
+                    </label>
                     <input 
                         type="text" 
                         name="name" 

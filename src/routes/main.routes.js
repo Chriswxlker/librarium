@@ -4,7 +4,8 @@ const router = express.Router();
 router.get('/', (req, res) => {
     res.render('index', { 
         titulo: 'Bienvenido a Librarium',
-        pagina: 'inicio'
+        pagina: 'inicio',
+        user: req.session.user // Pasa el usuario a la vista para el header
     });
 });
 
@@ -12,7 +13,8 @@ router.get('/dashboard', (req, res) => {
     res.render('dashboard', { 
         titulo: 'Dashboard',
         encabezado: 'Dashboard',
-        pagina: 'dashboard'
+        pagina: 'dashboard',
+        user: req.session.user // Pasa el usuario autenticado a la vista
     });
 });
 

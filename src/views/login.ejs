@@ -1,0 +1,69 @@
+<main class="w-full bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center">
+    <section class="w-full max-w-md px-6 py-12">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-teal-400 mb-2">Librarium</h1>
+            <p class="text-gray-400">Accede a tu cuenta para comenzar</p>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-8">
+            <form action="/login" method="POST" class="space-y-6">
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="bg-red-900/50 text-red-300 px-4 py-3 rounded-md border border-red-700">
+                        <%= error %>
+                    </div>
+                <% } %>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Correo electrónico</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-gray-100 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/50 outline-none transition"
+                        placeholder="tucorreo@ejemplo.com"
+                    >
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-gray-100 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/50 outline-none transition"
+                        placeholder="••••••••"
+                    >
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input 
+                            id="remember" 
+                            name="remember" 
+                            type="checkbox" 
+                            class="h-4 w-4 rounded border-gray-600 bg-gray-700 text-teal-400 focus:ring-teal-400"
+                        >
+                        <label for="remember" class="ml-2 block text-sm text-gray-400">Recordarme</label>
+                    </div>
+                    <a href="/forgot-password" class="text-sm text-teal-400 hover:text-teal-300 transition-colors">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-3 px-4 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                >
+                    Iniciar sesión
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-500 text-sm">
+                    ¿No tienes una cuenta? 
+                    <a href="/register" class="text-teal-400 hover:text-teal-300 font-medium transition-colors">Regístrate</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</main>

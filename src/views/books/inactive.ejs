@@ -1,7 +1,9 @@
 <main class="w-full bg-gray-900 text-gray-100 min-h-screen">
     <section class="max-w-6xl mx-auto px-4 py-8">
         <div>
-            <h1 class="text-3xl font-bold text-teal-400 mb-2">Libros Inactivos</h1>
+            <h1 class="text-3xl font-bold text-teal-400 mb-2 flex items-center gap-2">
+                <i class="fas fa-book-dead"></i> Libros Inactivos
+            </h1>
             <p class="text-gray-400">Libros desactivados en el sistema</p>
         </div>
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
@@ -10,7 +12,7 @@
             </div>
             <div class="flex gap-3">
                 <a href="/books" class="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors duration-300">
-                    Volver a activos
+                    <i class="fas fa-book"></i> Volver a activos
                 </a>
             </div>
         </div>
@@ -18,15 +20,15 @@
             <table class="w-full min-w-max" id="books-inactive-table">
                 <thead class="border-b border-gray-700">
                     <tr class="text-left">
-                        <th class="py-3 px-4 text-teal-300 font-semibold">ID</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Nombre</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Autor</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Categoría</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Editorial</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">ISBN</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Año</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Páginas</th>
-                        <th class="py-3 px-4 text-teal-300 font-semibold">Acciones</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-hashtag"></i> ID</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-book"></i> Nombre</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-user-edit"></i> Autor</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-tags"></i> Categoría</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-building"></i> Editorial</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-barcode"></i> ISBN</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-calendar-alt"></i> Año</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-file-alt"></i> Páginas</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold"><i class="fas fa-cogs"></i> Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,7 +44,9 @@
                             <td class="py-2 px-4"><%= book.num_pages %></td>
                             <td class="py-2 px-4 flex gap-2">
                                 <form action="/books/activate/<%= book.id_book %>" method="POST" class="inline">
-                                    <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded transition-colors">Activar</button>
+                                    <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded transition-colors">
+                                        <i class="fas fa-check"></i> Activar
+                                    </button>
                                 </form>
                             </td>
                         </tr>

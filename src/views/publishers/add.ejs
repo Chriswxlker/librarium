@@ -3,7 +3,9 @@
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-semibold text-gray-100">Agregar Editorial</h1>
+            <h1 class="text-3xl font-semibold text-gray-100 flex items-center gap-2">
+                <i class="fas fa-plus"></i> Agregar Editorial
+            </h1>
             <a href="/publishers" class="text-gray-400 hover:text-teal-400 transition-colors">
                 Volver
             </a>
@@ -12,8 +14,8 @@
         <div class="bg-gray-800 rounded-xl shadow-lg p-6">
             <form action="/publishers/add" method="POST" class="space-y-6">
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-300 mb-2">
-                        Nombre
+                    <label for="name" class="flex text-sm font-medium text-gray-300 mb-2 items-center gap-1">
+                        <i class="fas fa-building"></i> Nombre
                     </label>
                     <input type="text" 
                            name="name" 

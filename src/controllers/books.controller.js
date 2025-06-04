@@ -17,7 +17,7 @@ exports.list = async (req, res) => {
         total = await Book.countAll();
     }
     const totalPages = Math.ceil(total / limit);
-    res.render('books/list.ejs', { books, search, totalPages, page, titulo: 'Libros', pagina: 'dashboard' });
+    res.render('books/list.ejs', { books, search, totalPages, page, titulo: 'Libros', pagina: 'dashboard', user: req.session.user });
 };
 
 // Listar libros inactivos
@@ -27,7 +27,7 @@ exports.listInactive = async (req, res) => {
     const books = await Book.getInactive(limit, (page - 1) * limit);
     const total = await Book.countInactive();
     const totalPages = Math.ceil(total / limit);
-    res.render('books/inactive.ejs', { books, totalPages, page, titulo: 'Libros Inactivos', pagina: 'dashboard' });
+    res.render('books/inactive.ejs', { books, totalPages, page, titulo: 'Libros Inactivos', pagina: 'dashboard', user: req.session.user });
 };
 
 // Mostrar formulario de agregar libro
@@ -35,7 +35,7 @@ exports.showAddForm = async (req, res) => {
     const authors = await Author.getAll('', '1', 1, 100).then(r => r.authors || r);
     const categories = await Category.getAll('', '1', 1, 100).then(r => r.categories || r);
     const publishers = await Publisher.getAll('', '1', 1, 100).then(r => r.publishers || r);
-    res.render('books/add.ejs', { authors, categories, publishers, pagina: 'dashboard', titulo: 'Agregar Libro' });
+    res.render('books/add.ejs', { authors, categories, publishers, pagina: 'dashboard', titulo: 'Agregar Libro', user: req.session.user });
 };
 
 // Agregar libro
@@ -51,7 +51,7 @@ exports.showEditForm = async (req, res) => {
     const authors = await Author.getAll('', '1', 1, 100).then(r => r.authors || r);
     const categories = await Category.getAll('', '1', 1, 100).then(r => r.categories || r);
     const publishers = await Publisher.getAll('', '1', 1, 100).then(r => r.publishers || r);
-    res.render('books/edit.ejs', { book, authors, categories, publishers, pagina: 'dashboard', titulo: 'Editar Libro' });
+    res.render('books/edit.ejs', { book, authors, categories, publishers, pagina: 'dashboard', titulo: 'Editar Libro', user: req.session.user });
 };
 
 // Editar libro
