@@ -17,7 +17,8 @@ exports.list = async (req, res) => {
             search, 
             filterState: '', 
             totalPages, 
-            page 
+            page,
+            user: req.session.user // <-- Asegura que user esté disponible en la vista
         });
     }
 };
@@ -38,8 +39,8 @@ exports.listInactive = async (req, res) => {
             titulo: 'Categorías Inactivas', 
             search, 
             totalPages, 
-            page, 
-            filterState: '' 
+            page,
+            user: req.session.user // <-- Asegura que user esté disponible en la vista
         });
     }
 };

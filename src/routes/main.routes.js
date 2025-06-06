@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { isAdmin } = require('../middlewares/roles');
 
 router.get('/', (req, res) => {
     res.render('index', { 
@@ -9,7 +10,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', isAdmin, (req, res) => {
     res.render('dashboard', { 
         titulo: 'Dashboard',
         encabezado: 'Dashboard',

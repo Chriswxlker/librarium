@@ -7,7 +7,7 @@ exports.list = async (req, res) => {
     const limit = 10;
     const { authors, total } = await Author.getAll(search, '1', page, limit);
     const totalPages = Math.ceil(total / limit);
-    res.render('authors/list.ejs', { authors, pagina: 'dashboard', titulo: 'Listado de Autores', search, filterState: '', totalPages, page });
+    res.render('authors/list.ejs', { authors, pagina: 'dashboard', titulo: 'Listado de Autores', search, filterState: '', totalPages, page, user: req.session.user });
 };
 
 // Listar autores inactivos
@@ -17,12 +17,12 @@ exports.listInactive = async (req, res) => {
     const limit = 10;
     const { authors, total } = await Author.getAll(search, '0', page, limit);
     const totalPages = Math.ceil(total / limit);
-    res.render('authors/inactive.ejs', { authors, pagina: 'dashboard', titulo: 'Autores Inactivos', search, totalPages, page });
+    res.render('authors/inactive.ejs', { authors, pagina: 'dashboard', titulo: 'Autores Inactivos', search, totalPages, page, user: req.session.user });
 };
 
 // Mostrar formulario de agregar
 exports.showAddForm = (req, res) => {
-    res.render('authors/add.ejs', { pagina: 'dashboard', titulo: 'Agregar Autor' });
+    res.render('authors/add.ejs', { pagina: 'dashboard', titulo: 'Agregar Autor', user: req.session.user });
 };
 
 // Agregar autor (ahora recibe state)
@@ -35,7 +35,7 @@ exports.add = async (req, res) => {
 // Mostrar formulario de editar
 exports.showEditForm = async (req, res) => {
     const author = await Author.getById(req.params.id);
-    res.render('authors/edit.ejs', { author, pagina: 'dashboard', titulo: 'Editar Autor' });
+    res.render('authors/edit.ejs', { author, pagina: 'dashboard', titulo: 'Editar Autor', user: req.session.user });
 };
 
 // Editar autor (ahora recibe state)
