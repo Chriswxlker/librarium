@@ -116,6 +116,17 @@ const Book = {
     setState: async (id_book, state) => {
         await db.query('UPDATE books SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id_book = ?', [state, id_book]);
     },
+
+    // Obtener todos los libros disponibles (no prestados actualmente)
+    getAllAvailable: async () => {
+        const [rows] = await db.query(`
+            SELECT b.* FROM books b
+            WHERE b.state = 1 AND b.id_book NOT IN (
+                SELECT book_id FROM loans WHERE status IN ('pending', 'approved')
+            )
+        `);
+        return rows;
+    },
 };
 
 module.exports = Book;

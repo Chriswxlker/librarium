@@ -38,4 +38,7 @@ app.use('/users', usersRoutes);
 const authRoutes = require('./src/routes/auth.routes');
 app.use('/', authRoutes);
 
+const loansRoutes = require('./src/routes/loans.routes');
+app.use('/loans', loansRoutes);
+
 module.exports = app;

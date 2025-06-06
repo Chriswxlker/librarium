@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
     "dev": "nodemon server.js",
-    "build": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/output.css --watch"
+    "build": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/output.css --watch",
+    "init-db": "node src/database/init-db.js"
   },
   "repository": {
     "type": "git",

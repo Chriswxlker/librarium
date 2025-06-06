@@ -1,0 +1,88 @@
+<main class="w-full bg-gray-900 text-gray-100 min-h-screen">
+    <section class="max-w-6xl mx-auto px-4 py-8">
+        <div>
+            <h1 class="text-3xl font-bold text-teal-400 mb-2 flex items-center gap-2">
+                <i class="fas fa-hand-holding"></i> Gestión de Préstamos
+            </h1>
+            <p class="text-gray-400">Gestión y control de los préstamos de libros</p>
+        </div>
+        <!-- Barra de acciones -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
+            <div class="text-sm text-gray-400">
+                Total: <%= loans.length %> préstamos
+            </div>
+            <div class="flex gap-3">
+                <a 
+                    href="/loans/assign" 
+                    class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30"
+                >
+                    <i class="fas fa-plus"></i> Asignar préstamo
+                </a>
+            </div>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg overflow-x-auto mt-6">
+            <% if (error) { %>
+                <div class="bg-red-800 text-red-200 px-4 py-2 rounded mb-4"><%= error %></div>
+            <% } %>
+            <table class="w-full min-w-max" id="loans-table">
+                <thead class="border-b border-gray-700">
+                    <tr class="text-left">
+                        <th class="py-3 px-4 text-teal-300 font-semibold">ID</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold">Usuario</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold">Libro</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold">Fecha solicitud</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold">Fecha devolución</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold">Estado</th>
+                        <th class="py-3 px-4 text-teal-300 font-semibold text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% loans.forEach(function(loan) { %>
+                        <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                            <td class="py-4 px-4"><%= loan.id %></td>
+                            <td class="py-4 px-4 font-medium"><%= loan.user_name || loan.user_id %></td>
+                            <td class="py-4 px-4 font-medium"><%= loan.book_name || loan.book_id %></td>
+                            <td class="py-4 px-4"><%= loan.created_at ? loan.created_at.toISOString().split('T')[0] : '' %></td>
+                            <td class="py-4 px-4"><%= loan.due_date ? loan.due_date.toISOString().split('T')[0] : '' %></td>
+                            <td class="py-4 px-4">
+                                <% if (loan.status === 'pending') { %>
+                                    <span class="inline-flex items-center gap-1 text-yellow-400"><i class="fas fa-hourglass-half"></i> Pendiente</span>
+                                <% } else if (loan.status === 'approved') { %>
+                                    <span class="inline-flex items-center gap-1 text-green-400"><i class="fas fa-check-circle"></i> Aprobado</span>
+                                <% } else if (loan.status === 'rejected') { %>
+                                    <span class="inline-flex items-center gap-1 text-red-400"><i class="fas fa-times-circle"></i> Rechazado</span>
+                                <% } else if (loan.status === 'returned') { %>
+                                    <span class="inline-flex items-center gap-1 text-blue-400"><i class="fas fa-undo"></i> Devuelto</span>
+                                <% } %>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex justify-end gap-2">
+                                    <% if (loan.status === 'pending') { %>
+                                        <form action="/loans/<%= loan.id %>/status" method="POST" class="inline-block">
+                                            <input type="hidden" name="status" value="approved">
+                                            <button class="inline-flex items-center gap-1 bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                                <i class="fas fa-check"></i> Aprobar
+                                            </button>
+                                        </form>
+                                        <form action="/loans/<%= loan.id %>/status" method="POST" class="inline-block">
+                                            <input type="hidden" name="status" value="rejected">
+                                            <button class="inline-flex items-center gap-1 bg-red-600 hover:bg-red-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                                <i class="fas fa-times"></i> Rechazar
+                                            </button>
+                                        </form>
+                                    <% } %>
+                                    <% if (loan.status === 'approved') { %>
+                                        <form action="/loans/<%= loan.id %>/return" method="POST" class="inline-block">
+                                            <button class="inline-flex items-center gap-1 bg-yellow-600 hover:bg-yellow-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                                <i class="fas fa-undo"></i> Marcar como devuelto
+                                            </form>
+                                    <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>

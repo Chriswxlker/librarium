@@ -1,0 +1,28 @@
+<%- include('../partials/header', { user: user }) %>
+<h2>Mis Préstamos</h2>
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Libro</th>
+      <th>Fecha de solicitud</th>
+      <th>Fecha de devolución</th>
+      <th>Estado</th>
+      <th>Devuelto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% loans.forEach(function(loan) { %>
+      <tr>
+        <td><%= loan.book_id %></td>
+        <td><%= loan.created_at ? loan.created_at.toISOString().split('T')[0] : '' %></td>
+        <td><%= loan.due_date ? loan.due_date.toISOString().split('T')[0] : '' %></td>
+        <td><%= loan.status %></td>
+        <td><%= loan.returned_at ? loan.returned_at.toISOString().split('T')[0] : '-' %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('../partials/footer') %>

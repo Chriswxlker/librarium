@@ -1,0 +1,39 @@
+<%- include('../partials/header', { user: user }) %>
+<main class="w-full bg-gray-900 text-gray-100 min-h-screen">
+    <section class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+            <i class="fas fa-plus"></i> Asignar Préstamo
+        </h1>
+        <% if (error) { %>
+            <div class="bg-red-800 text-red-200 px-4 py-2 rounded mb-4"><%= error %></div>
+        <% } %>
+        <form action="/loans/assign" method="POST" class="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-lg">
+            <div class="mb-4">
+                <label for="user_id" class="block mb-2 font-semibold text-teal-300">Usuario</label>
+                <select name="user_id" id="user_id" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required>
+                    <option value="">Selecciona un usuario</option>
+                    <% users.forEach(function(u) { %>
+                        <option value="<%= u.id %>"><%= u.name %> (<%= u.email %>)</option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="book_id" class="block mb-2 font-semibold text-teal-300">Libro</label>
+                <select name="book_id" id="book_id" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required>
+                    <option value="">Selecciona un libro</option>
+                    <% books.forEach(function(b) { %>
+                        <option value="<%= b.id_book %>"><%= b.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="due_date" class="block mb-2 font-semibold text-teal-300">Fecha de devolución</label>
+                <input type="date" name="due_date" id="due_date" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required min="<%= new Date().toISOString().split('T')[0] %>">
+            </div>
+            <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30 w-full flex items-center justify-center gap-2">
+                <i class="fas fa-check"></i> Asignar préstamo
+            </button>
+        </form>
+    </section>
+</main>
+<%- include('../partials/footer') %>

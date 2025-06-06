@@ -10,6 +10,11 @@ const User = {
         const [rows] = await db.query('SELECT * FROM users WHERE status = ? ORDER BY id DESC LIMIT ? OFFSET ?', [status, limit, offset]);
         return rows;
     },
+    // Obtener todos los usuarios activos (sin paginación, para selects)
+    getAllNoPaginate: async (status = 1) => {
+        const [rows] = await db.query('SELECT * FROM users WHERE status = ? ORDER BY id DESC', [status]);
+        return rows;
+    },
     // Contar usuarios activos/inactivos
     countAll: async (status = 1) => {
         const [rows] = await db.query('SELECT COUNT(*) as total FROM users WHERE status = ?', [status]);
@@ -54,6 +59,15 @@ const User = {
     },
     setStatus: async (id, status) => {
         await db.query('UPDATE users SET status = ? WHERE id = ?', [status, id]);
+    },
+    // Obtener todos los usuarios con préstamos activos
+    getAllActive: async () => {
+        const [rows] = await db.query(`
+            SELECT DISTINCT u.* FROM users u
+            INNER JOIN loans l ON u.id = l.user_id
+            WHERE l.status IN ('pending', 'approved')
+        `);
+        return rows;
     }
 };
 
