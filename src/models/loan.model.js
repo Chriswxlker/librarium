@@ -20,7 +20,7 @@ class Loan {
     }
 
     static async getById(id) {
-        const [rows] = await db.execute('SELECT * FROM loans WHERE id = ?', [id]);
+        const [rows] = await db.execute('SELECT l.*, l.id_loan AS id FROM loans l WHERE l.id_loan = ?', [id]);
         return rows[0];
     }
 

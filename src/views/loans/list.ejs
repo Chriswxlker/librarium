@@ -39,7 +39,7 @@
                 <tbody>
                     <% loans.forEach(function(loan) { %>
                         <tr class="border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
-                            <td class="py-4 px-4"><%= loan.id %></td>
+                            <td class="py-4 px-4"><%= loan.id || loan.id_loan %></td>
                             <td class="py-4 px-4 font-medium"><%= loan.user_name || loan.user_id %></td>
                             <td class="py-4 px-4 font-medium"><%= loan.book_name || loan.book_id %></td>
                             <td class="py-4 px-4"><%= loan.loan_date ? loan.loan_date.toISOString().split('T')[0] : '' %></td>
@@ -61,7 +61,7 @@
                             </td>
                             <td class="py-4 px-4">
                                 <div class="flex justify-end gap-2">
-                                    <a href="/loans/edit/<%= loan.id %>" class="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                    <a href="/loans/edit/<%= loan.id || loan.id_loan %>" class="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
                                         <i class="fas fa-edit"></i> Editar
                                     </a>
                                     <% if (loan.status === 'pending') { %>
@@ -94,3 +94,8 @@
         </div>
     </section>
 </main>
+
+static async getById(id) {
+    const [rows] = await db.execute('SELECT l.*, l.id_loan AS id FROM loans l WHERE l.id_loan = ?', [id]);
+    return rows[0];
+}
