@@ -1,0 +1,44 @@
+<main class="w-full bg-gray-900 text-gray-100 min-h-screen">
+    <section class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+            <i class="fas fa-edit"></i> Editar Préstamo
+        </h1>
+        <% if (error) { %>
+            <div class="bg-red-800 text-red-200 px-4 py-2 rounded mb-4"><%= error %></div>
+        <% } %>
+        <form action="/loans/edit/<%= loan.id %>" method="POST" class="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-lg">
+            <div class="mb-4">
+                <label for="user_id" class="block mb-2 font-semibold text-teal-300">Usuario</label>
+                <select name="user_id" id="user_id" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required>
+                    <% users.forEach(function(u) { %>
+                        <option value="<%= u.id %>" <%= loan.id_user == u.id ? 'selected' : '' %>><%= u.name %> (<%= u.email %>)</option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="book_id" class="block mb-2 font-semibold text-teal-300">Libro</label>
+                <select name="book_id" id="book_id" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required>
+                    <% books.forEach(function(b) { %>
+                        <option value="<%= b.id_book %>" <%= loan.id_book == b.id_book ? 'selected' : '' %>><%= b.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="due_date" class="block mb-2 font-semibold text-teal-300">Fecha de devolución</label>
+                <input type="date" name="due_date" id="due_date" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required value="<%= loan.due_date ? loan.due_date.toISOString().split('T')[0] : '' %>">
+            </div>
+            <div class="mb-4">
+                <label for="status" class="block mb-2 font-semibold text-teal-300">Estado</label>
+                <select name="status" id="status" class="w-full p-2 rounded bg-gray-900 border border-gray-700 text-gray-100" required>
+                    <option value="activo" <%= loan.status === 'activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="devuelto" <%= loan.status === 'devuelto' ? 'selected' : '' %>>Devuelto</option>
+                    <option value="vencido" <%= loan.status === 'vencido' ? 'selected' : '' %>>Vencido</option>
+                </select>
+            </div>
+            <div class="flex justify-between mt-8">
+                <a href="/loans" class="inline-block bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2 px-6 rounded-lg transition-colors duration-300">Volver</a>
+                <button type="submit" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-8 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">Actualizar</button>
+            </div>
+        </form>
+    </section>
+</main>

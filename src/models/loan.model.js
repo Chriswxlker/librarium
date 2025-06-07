@@ -1,10 +1,10 @@
 const db = require('../database/connection');
 
 class Loan {
-    static async create({ user_id, id_book, due_date }) {
+    static async create({ id_user, id_book, due_date }) {
         const [result] = await db.execute(
-            'INSERT INTO loans (user_id, id_book, due_date, status) VALUES (?, ?, ?, ?)',
-            [user_id, id_book, due_date, 'pending']
+            'INSERT INTO loans (id_user, id_book, loan_date, due_date, status) VALUES (?, ?, NOW(), ?, ?)',
+            [id_user, id_book, due_date, 'activo']
         );
         return result.insertId;
     }
@@ -13,7 +13,7 @@ class Loan {
         const [rows] = await db.execute(`
             SELECT l.*, u.name AS user_name, b.name AS book_name
             FROM loans l
-            LEFT JOIN users u ON l.user_id = u.id
+            LEFT JOIN users u ON l.id_user = u.id
             LEFT JOIN books b ON l.id_book = b.id_book
         `);
         return rows;
@@ -24,8 +24,13 @@ class Loan {
         return rows[0];
     }
 
-    static async getByUser(user_id) {
-        const [rows] = await db.execute('SELECT * FROM loans WHERE user_id = ?', [user_id]);
+    static async getByUser(id_user) {
+        const [rows] = await db.execute(`
+            SELECT l.*, b.name AS book_name
+            FROM loans l
+            LEFT JOIN books b ON l.id_book = b.id_book
+            WHERE l.id_user = ?
+        `, [id_user]);
         return rows;
     }
 

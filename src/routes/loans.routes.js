@@ -25,4 +25,8 @@ router.post('/:id/return', isLibrarianOrAdmin, loansController.returnLoan);
 router.get('/assign', isLibrarianOrAdmin, loansController.assignForm);
 router.post('/assign', isLibrarianOrAdmin, loansController.assign);
 
+// Editar préstamo
+router.get('/edit/:id', isLibrarianOrAdmin, loansController.editForm);
+router.post('/edit/:id', isLibrarianOrAdmin, loansController.edit);
+
 module.exports = router;
