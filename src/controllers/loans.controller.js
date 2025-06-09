@@ -8,15 +8,16 @@ exports.requestLoan = async (req, res) => {
         const { id_book, due_date } = req.body;
         const user_id = req.session.user.id;
         // Verificar disponibilidad del libro
-        const availableBooks = await Book.getAllAvailable();
-        if (!availableBooks.find(b => b.id_book == id_book)) {
+        const book = await Book.getById(id_book);
+        if (!book || book.stock < 1) {
             return res.status(400).render('loans/add', { error: 'El libro no está disponible.', user: req.session.user, titulo: 'Solicitar préstamo' });
         }
-        await Loan.create({ user_id, id_book, due_date });
+        await Loan.create({ id_user: user_id, id_book, due_date });
+        await Book.decrementStock(id_book);
         res.redirect('/loans/my');
     } catch (err) {
         console.error('Error en requestLoan:', err);
-        res.status(500).render('loans/add', { error: 'Error al solicitar préstamo.', user: req.session.user, titulo: 'Solicitar préstamo' });
+        res.status(500).render('loans/add', { error: 'Error al solicitar préstamo.', user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo' });
     }
 };
 
@@ -25,10 +26,10 @@ exports.myLoans = async (req, res) => {
     try {
         const user_id = req.session.user.id;
         const loans = await Loan.getByUser(user_id);
-        res.render('loans/my', { loans, user: req.session.user, titulo: 'Mis préstamos' });
+        res.render('loans/my', { loans, user: req.session.user, titulo: 'Mis préstamos', pagina: 'Mis Préstamos' });
     } catch (err) {
         console.error('Error en myLoans:', err);
-        res.status(500).render('loans/my', { error: 'Error al cargar préstamos.', user: req.session.user, titulo: 'Mis préstamos' });
+        res.status(500).render('loans/my', { error: 'Error al cargar préstamos.', user: req.session.user, titulo: 'Mis préstamos', pagina: 'Mis Préstamos' });
     }
 };
 
@@ -36,10 +37,10 @@ exports.myLoans = async (req, res) => {
 exports.list = async (req, res) => {
     try {
         const loans = await Loan.getAll();
-        res.render('loans/list', { loans, user: req.session.user, titulo: 'Gestión de préstamos', error: null });
+        res.render('loans/list', { loans, user: req.session.user, titulo: 'Gestión de préstamos', error: null, pagina: 'Prestamos' });
     } catch (err) {
         console.error('Error en list:', err);
-        res.status(500).render('loans/list', { loans: [], user: req.session.user, titulo: 'Gestión de préstamos', error: 'Error al cargar préstamos.' });
+        res.status(500).render('loans/list', { loans: [], user: req.session.user, titulo: 'Gestión de préstamos', error: 'Error al cargar préstamos.', pagina: 'Prestamos' });
     }
 };
 
@@ -56,11 +57,51 @@ exports.updateStatus = async (req, res) => {
     }
 };
 
+// Asignar préstamo (bibliotecario o admin)
+exports.assign = async (req, res) => {
+    try {
+        const { user_id, book_id, due_date } = req.body;
+        // Validación de stock
+        const book = await Book.getById(book_id);
+        if (!book || book.stock < 1) {
+            const users = await User.getAllNoPaginate(1);
+            const books = await Book.getAllAvailable();
+            return res.status(400).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'No hay stock disponible para este libro.' });
+        }
+        // Validación de campos obligatorios
+        if (!user_id || !book_id || !due_date) {
+            const users = await User.getAllNoPaginate(1);
+            const books = await Book.getAllAvailable();
+            return res.status(400).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'Todos los campos son obligatorios.' });
+        }
+        // Verificar que el usuario no tenga ya un préstamo activo de ese libro
+        const [rows] = await require('../database/connection').execute(
+            'SELECT * FROM loans WHERE id_user = ? AND id_book = ? AND status IN ("activo", "aprobado")',
+            [user_id, book_id]
+        );
+        if (rows.length > 0) {
+            const users = await User.getAllNoPaginate(1);
+            const books = await Book.getAllAvailable();
+            return res.status(400).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'El usuario ya tiene este libro prestado.' });
+        }
+        await Loan.create({ id_user: user_id, id_book: book_id, due_date });
+        await Book.decrementStock(book_id);
+        res.redirect('/loans');
+    } catch (err) {
+        console.error('Error en assign:', err);
+        const users = await User.getAllNoPaginate(1);
+        const books = await Book.getAllAvailable();
+        res.status(500).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'Error al asignar préstamo.', pagina: 'Asignar Préstamo' });
+    }
+};
+
 // Marcar préstamo como devuelto (bibliotecario)
 exports.returnLoan = async (req, res) => {
     try {
         const { id } = req.params;
+        const loan = await Loan.getById(id);
         await Loan.setReturned(id);
+        await Book.incrementStock(loan.id_book);
         res.redirect('/loans');
     } catch (err) {
         console.error('Error en returnLoan:', err);
@@ -72,10 +113,10 @@ exports.returnLoan = async (req, res) => {
 exports.addForm = async (req, res) => {
     try {
         const books = await Book.getAllAvailable();
-        res.render('loans/add', { books, user: req.session.user, titulo: 'Solicitar préstamo' });
+        res.render('loans/add', { books, user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo', error: null });
     } catch (err) {
         console.error('Error en addForm:', err);
-        res.status(500).render('loans/add', { error: 'Error al cargar libros.', user: req.session.user, titulo: 'Solicitar préstamo' });
+        res.status(500).render('loans/add', { error: 'Error al cargar libros.', user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo' });
     }
 };
 
@@ -84,41 +125,10 @@ exports.assignForm = async (req, res) => {
     try {
         const users = await User.getAllNoPaginate(1); // usuarios activos sin paginación
         const books = await Book.getAllAvailable();
-        res.render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: null });
+        res.render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: null, pagina: 'Asignar Préstamo' });
     } catch (err) {
         console.error('Error en assignForm:', err);
-        res.status(500).render('loans/assign', { users: [], books: [], user: req.session.user, titulo: 'Asignar préstamo', error: 'Error al cargar datos.' });
-    }
-};
-
-// Asignar préstamo (bibliotecario o admin)
-exports.assign = async (req, res) => {
-    try {
-        const { user_id, book_id, due_date } = req.body;
-        const id_book = book_id;
-        // Validación de campos obligatorios
-        if (!user_id || !id_book || !due_date) {
-            const users = await User.getAllNoPaginate(1);
-            const books = await Book.getAll();
-            return res.status(400).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'Todos los campos son obligatorios.' });
-        }
-        // Verificar que el usuario no tenga ya un préstamo activo de ese libro
-        const [rows] = await require('../database/connection').execute(
-            'SELECT * FROM loans WHERE id_user = ? AND id_book = ? AND status IN ("pending", "approved")',
-            [user_id, id_book]
-        );
-        if (rows.length > 0) {
-            const users = await User.getAllNoPaginate(1);
-            const books = await Book.getAll();
-            return res.status(400).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'El usuario ya tiene este libro prestado.' });
-        }
-        await Loan.create({ id_user: user_id, id_book, due_date });
-        res.redirect('/loans');
-    } catch (err) {
-        console.error('Error en assign:', err);
-        const users = await User.getAllNoPaginate(1);
-        const books = await Book.getAll();
-        res.status(500).render('loans/assign', { users, books, user: req.session.user, titulo: 'Asignar préstamo', error: 'Error al asignar préstamo.' });
+        res.status(500).render('loans/assign', { users: [], books: [], user: req.session.user, titulo: 'Asignar préstamo', error: 'Error al cargar datos.', pagina: 'Asignar Préstamo' });
     }
 };
 
@@ -128,10 +138,10 @@ exports.editForm = async (req, res) => {
         const loan = await Loan.getById(req.params.id);
         const users = await User.getAllNoPaginate(1);
         const books = await Book.getAll();
-        res.render('loans/edit', { loan, users, books, user: req.session.user, titulo: 'Editar Préstamo', error: null });
+        res.render('loans/edit', { loan, users, books, user: req.session.user, titulo: 'Editar Préstamo', error: null, pagina: 'Prestamos' });
     } catch (err) {
         console.error('Error en editForm:', err);
-        res.status(500).render('loans/edit', { loan: {}, users: [], books: [], user: req.session.user, titulo: 'Editar Préstamo', error: 'Error al cargar el préstamo.' });
+        res.status(500).render('loans/edit', { loan: {}, users: [], books: [], user: req.session.user, titulo: 'Editar Préstamo', error: 'Error al cargar el préstamo.', pagina: 'Prestamos' });
     }
 };
 
@@ -140,6 +150,7 @@ exports.edit = async (req, res) => {
     try {
         const { user_id, book_id, due_date, status } = req.body;
         const id_book = book_id;
+        console.log('Datos recibidos para actualizar:', { user_id, id_book, due_date, status });
         await Loan.update(req.params.id, { id_user: user_id, id_book, due_date, status });
         res.redirect('/loans');
     } catch (err) {
@@ -147,6 +158,6 @@ exports.edit = async (req, res) => {
         const loan = await Loan.getById(req.params.id);
         const users = await User.getAllNoPaginate(1);
         const books = await Book.getAll();
-        res.status(500).render('loans/edit', { loan, users, books, user: req.session.user, titulo: 'Editar Préstamo', error: 'Error al actualizar el préstamo.' });
+        res.status(500).render('loans/edit', { loan, users, books, user: req.session.user, titulo: 'Editar Préstamo', error: 'Error al actualizar el préstamo.', pagina: 'Prestamos' });
     }
 };

@@ -47,9 +47,10 @@ exports.listInactive = async (req, res) => {
 
 //Mostrar formulario de agregar
 exports.showAddForm = (req, res) => {
-    res.render('categories/add', { 
-        pagina: 'dashboard', 
-        titulo: 'Agregar Categoría' 
+    res.render('categories/add', {
+        pagina: 'dashboard',
+        titulo: 'Agregar Categoría',
+        user: req.session.user
     });
 };
 
@@ -63,10 +64,11 @@ exports.add = async (req, res) => {
 //Mostrar formulario de editar
 exports.showEditForm = async (req, res) => {
     const category = await Caterogy.getById(req.params.id);
-    res.render('categories/edit', { 
-        category, 
-        pagina: 'dashboard', 
-        titulo: 'Editar Categoría' 
+    res.render('categories/edit', {
+        category,
+        pagina: 'dashboard',
+        titulo: 'Editar Categoría',
+        user: req.session.user
     });
 };
 

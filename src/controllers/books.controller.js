@@ -40,8 +40,8 @@ exports.showAddForm = async (req, res) => {
 
 // Agregar libro
 exports.add = async (req, res) => {
-    const { name, id_author, isbn, year_published, num_pages, id_category, id_publisher } = req.body;
-    await Book.create({ name, id_author, isbn, year_published, num_pages, id_category, id_publisher });
+    const { name, id_author, isbn, year_published, stock, id_category, id_publisher } = req.body;
+    await Book.create({ name, id_author, isbn, year_published, stock, id_category, id_publisher });
     res.redirect('/books');
 };
 
@@ -56,8 +56,8 @@ exports.showEditForm = async (req, res) => {
 
 // Editar libro
 exports.edit = async (req, res) => {
-    const { name, id_author, isbn, year_published, num_pages, id_category, id_publisher } = req.body;
-    await Book.update(req.params.id, { name, id_author, isbn, year_published, num_pages, id_category, id_publisher });
+    const { name, id_author, isbn, year_published, stock, id_category, id_publisher } = req.body;
+    await Book.update(req.params.id, { name, id_author, isbn, year_published, stock, id_category, id_publisher });
     res.redirect('/books');
 };
 

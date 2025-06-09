@@ -3,12 +3,11 @@ const db = require('../database/connection');
 const Book = {
   // Crear un nuevo libro
     create: async (data) => {
-        const { name, id_author, isbn, year_published, num_pages, id_category, id_publisher } = data;
-        const [result] = await db.query(
-        `INSERT INTO books (name, id_author, isbn, year_published, num_pages, id_category, id_publisher) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [name, id_author, isbn, year_published, num_pages, id_category, id_publisher]
+        const { name, id_author, isbn, year_published, stock, id_category, id_publisher } = data;
+        await db.query(
+        `INSERT INTO books (name, id_author, isbn, year_published, stock, id_category, id_publisher, state) VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+        [name, id_author, isbn, year_published, stock, id_category, id_publisher]
         );
-        return result.insertId;
     },
 
     // Obtener todos los libros activos con joins
@@ -105,10 +104,10 @@ const Book = {
 
     // Actualizar libro
     update: async (id_book, data) => {
-        const { name, id_author, isbn, year_published, num_pages, id_category, id_publisher } = data;
+        const { name, id_author, isbn, year_published, stock, id_category, id_publisher } = data;
         await db.query(
-        `UPDATE books SET name = ?, id_author = ?, isbn = ?, year_published = ?, num_pages = ?, id_category = ?, id_publisher = ?, updated_at = CURRENT_TIMESTAMP WHERE id_book = ?`,
-        [name, id_author, isbn, year_published, num_pages, id_category, id_publisher, id_book]
+        `UPDATE books SET name = ?, id_author = ?, isbn = ?, year_published = ?, stock = ?, id_category = ?, id_publisher = ?, updated_at = CURRENT_TIMESTAMP WHERE id_book = ?`,
+        [name, id_author, isbn, year_published, stock, id_category, id_publisher, id_book]
         );
     },
 
@@ -117,15 +116,28 @@ const Book = {
         await db.query('UPDATE books SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id_book = ?', [state, id_book]);
     },
 
-    // Obtener todos los libros disponibles (no prestados actualmente)
+    // Obtener todos los libros disponibles (stock > 0 y activos)
     getAllAvailable: async () => {
         const [rows] = await db.query(`
-            SELECT b.* FROM books b
-            WHERE b.state = 1 AND b.id_book NOT IN (
-                SELECT id_book FROM loans WHERE status IN ('pending', 'approved')
-            )
+            SELECT b.*, a.name AS author, c.name AS category, p.name AS publisher
+            FROM books b
+            LEFT JOIN authors a ON b.id_author = a.id_author
+            LEFT JOIN categories c ON b.id_category = c.id_category
+            LEFT JOIN publishers p ON b.id_publisher = p.id_publisher
+            WHERE b.state = 1 AND b.stock > 0
+            ORDER BY b.name ASC
         `);
         return rows;
+    },
+
+    // Descontar stock
+    decrementStock: async (id_book) => {
+        await db.query('UPDATE books SET stock = stock - 1 WHERE id_book = ? AND stock > 0', [id_book]);
+    },
+
+    // Aumentar stock
+    incrementStock: async (id_book) => {
+        await db.query('UPDATE books SET stock = stock + 1 WHERE id_book = ?', [id_book]);
     },
 };
 

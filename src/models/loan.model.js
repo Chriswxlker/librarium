@@ -41,6 +41,13 @@ class Loan {
     static async setReturned(id) {
         await db.execute('UPDATE loans SET status = ?, returned_at = NOW() WHERE id = ?', ['returned', id]);
     }
+
+    static async update(id_loan, { id_user, id_book, due_date, status }) {
+        await db.execute(
+            'UPDATE loans SET id_user = ?, id_book = ?, due_date = ?, status = ? WHERE id_loan = ?',
+            [id_user, id_book, due_date, status, id_loan]
+        );
+    }
 }
 
 module.exports = Loan;

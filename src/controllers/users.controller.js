@@ -36,7 +36,7 @@ const usersController = {
     // Mostrar formulario para editar usuario
     editForm: async (req, res) => {
         const user = await User.getById(req.params.id);
-        res.render('users/edit', { user, userSession: req.session.user, titulo: 'Editar usuario' });
+        res.render('users/edit', { user, user: req.session.user, pagina: 'dashboard', titulo: 'Editar usuario' });
     },
 
     // Editar usuario

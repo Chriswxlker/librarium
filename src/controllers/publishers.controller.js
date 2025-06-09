@@ -48,9 +48,10 @@ exports.listInactive = async (req, res) => {
 
 // Mostrar formulario de agregar
 exports.showAddForm = (req, res) => {
-    res.render('publishers/add', { 
-        pagina: 'dashboard', 
-        titulo: 'Agregar Editorial' 
+    res.render('publishers/add', {
+        pagina: 'dashboard',
+        titulo: 'Agregar Editorial',
+        user: req.session.user
     });
 };
 
@@ -64,10 +65,11 @@ exports.add = async (req, res) => {
 // Mostrar formulario de editar
 exports.showEditForm = async (req, res) => {
     const publisher = await Publisher.getById(req.params.id);
-    res.render('publishers/edit', { 
-        publisher, 
-        pagina: 'dashboard', 
-        titulo: 'Editar Editorial' 
+    res.render('publishers/edit', {
+        publisher,
+        pagina: 'dashboard',
+        titulo: 'Editar Editorial',
+        user: req.session.user
     });
 };
 

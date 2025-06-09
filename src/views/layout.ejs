@@ -1,19 +1,30 @@
-<!-- filepath: c:\codename_\ADSO 2025\librarium\src\views\layout.ejs -->
 <!DOCTYPE html>
 <html>
 <head>
     <title><%= titulo %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('main-content');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('md:block');
+            content.classList.toggle('md:ml-64');
+        }
+    </script>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-900">
-    <%- include('partials/header') %>
-    <main class="flex-grow">
-        <%- body %>
-    </main>
-    <%- include('partials/footer') %>
-    <% if (typeof pagina !== 'undefined' && pagina === 'publishers') { %>
-        <script src="/js/publishers/publishers-list.js"></script>
+<body class="min-h-screen bg-gray-900 text-gray-100">
+    <% if (user && user.role === 'admin') { %>
+        <%- include('partials/sidebar') %>
     <% } %>
+    <div id="main-content" class="flex-1 flex flex-col min-h-screen <%= user && user.role === 'admin' ? 'md:ml-64' : '' %>">
+        <%- include('partials/header') %>
+        <main class="flex-grow p-2 sm:p-4 md:p-6 transition-all duration-300">
+            <%- body %>
+        </main>
+        <%- include('partials/footer') %>
+    </div>
 </body>
 </html>

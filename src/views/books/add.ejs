@@ -38,10 +38,10 @@
                         <input type="number" name="year_published" id="year_published" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                     </div>
                     <div class="w-1/2">
-                        <label for="num_pages" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
-                            <i class="fas fa-file-alt"></i> Páginas:
+                        <label for="stock" class="flex text-teal-300 font-medium mb-2 items-center gap-1">
+                            <i class="fas fa-file-alt"></i> Stock:
                         </label>
-                        <input type="number" name="num_pages" id="num_pages" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
+                        <input type="number" name="stock" id="stock" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                     </div>
                 </div>
                 <div>
@@ -68,7 +68,9 @@
                 </div>
                 <div class="flex justify-between mt-8">
                     <a href="/books" class="inline-block bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2 px-6 rounded-lg transition-colors duration-300">Volver</a>
-                    <button type="submit" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-8 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">Agregar</button>
+                    <button type="submit" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-8 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30 flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Agregar libro
+                    </button>
                 </div>
             </form>
         </div>
