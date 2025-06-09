@@ -7,13 +7,10 @@
                         <i class="fas fa-bars"></i>
                     </button>
                 <% } %>
-                <% if (user && user.role === 'admin') { %>
-                    <span class="text-2xl font-bold text-teal-400 cursor-default select-none">Librarium</span>
-                <% } else { %>
-                    <a href="/" class="text-2xl font-bold text-teal-400 hover:text-teal-300 transition-colors duration-300">
-                        Librarium
-                    </a>
-                <% } %>
+                <a href="<%= user ? '/dashboard' : '/' %>" class="flex items-center gap-2">
+                    <img src="/public/img/logo.svg" alt="Librarium Logo" class="h-8">
+                    <span class="text-teal-400 font-bold text-xl">Librarium</span>
+                </a>
             </div>
             <div class="hidden md:flex space-x-6 items-center">
                 <% if (!user) { %>

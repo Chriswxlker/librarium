@@ -1,24 +1,37 @@
-<h2>Solicitar Préstamo</h2>
-<% if (error) { %>
-  <div class="alert alert-danger"><%= error %></div>
-<% } %>
-<form action="/loans/add" method="POST">
-  <div class="form-group">
-    <label for="book_id">Libro</label>
-    <select name="book_id" id="book_id" class="form-control" required>
-      <% books.forEach(function(book) { %>
-        <option value="<%= book.id_book %>"><%= book.name %></option>
-      <% }) %>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="due_date">Fecha de devolución</label>
-    <input type="date" name="due_date" id="due_date" class="form-control" required min="<%= new Date().toISOString().split('T')[0] %>">
-  </div>
-  <div class="flex justify-between mt-8">
-    <a href="/loans/my" class="inline-block bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2 px-6 rounded-lg transition-colors duration-300">Volver</a>
-    <button type="submit" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-8 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30 flex items-center gap-2">
-      <i class="fas fa-paper-plane"></i> Solicitar
-    </button>
-  </div>
-</form>
+<main class="w-full bg-gray-900 text-gray-100 min-h-screen">
+    <section class="max-w-xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-teal-400 mb-2 flex items-center gap-2">
+                <i class="fas fa-book-reader"></i> Solicitar préstamo
+            </h1>
+            <p class="text-gray-400">Solicita un préstamo de libro</p>
+        </div>
+        <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 shadow-lg">
+            <form action="/loans/add" method="POST" class="space-y-6">
+                <div>
+                    <label for="book" class="flex text-sm font-medium text-gray-300 mb-2 items-center gap-1">
+                        <i class="fas fa-book"></i> Libro
+                    </label>
+                    <select id="book" name="book_id" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-gray-100">
+                        <option value="">Selecciona un libro</option>
+                        <% books.forEach(function(book) { %>
+                            <option value="<%= book.id %>"><%= book.name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div>
+                    <label for="due_date" class="flex text-sm font-medium text-gray-300 mb-2 items-center gap-1">
+                        <i class="fas fa-calendar-alt"></i> Fecha de devolución
+                    </label>
+                    <input type="date" id="due_date" name="due_date" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-gray-100">
+                </div>
+                <div class="flex justify-between mt-8">
+                    <a href="/dashboard" class="inline-block bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium py-2 px-6 rounded-lg transition-colors duration-300">Volver</a>
+                    <button type="submit" class="inline-block bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-8 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30 flex items-center gap-2">
+                        <i class="fas fa-book-reader"></i> Solicitar préstamo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>

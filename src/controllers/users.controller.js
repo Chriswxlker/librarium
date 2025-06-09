@@ -27,7 +27,9 @@ const usersController = {
 
     // Crear usuario
     add: async (req, res) => {
-        const { name, email, password, role } = req.body;
+        let { name, email, password, role } = req.body;
+        if (role === 'bibliotecario') role = 'librarian';
+        if (role === 'usuario') role = 'user';
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.create({ name, email, password: hashedPassword, role, status: 1 });
         res.redirect('/users');
@@ -41,7 +43,9 @@ const usersController = {
 
     // Editar usuario
     edit: async (req, res) => {
-        const { name, email, role, status } = req.body;
+        let { name, email, role, status } = req.body;
+        if (role === 'bibliotecario') role = 'librarian';
+        if (role === 'usuario') role = 'user';
         await User.update(req.params.id, { name, email, role, status });
         res.redirect('/users');
     },

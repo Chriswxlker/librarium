@@ -44,11 +44,13 @@
                             <td class="py-2 px-4"><%= book.year_published %></td>
                             <td class="py-2 px-4"><%= book.stock %></td>
                             <td class="py-2 px-4 flex gap-2">
-                                <form action="/books/activate/<%= book.id_book %>" method="POST" class="inline">
-                                    <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded transition-colors">
-                                        <i class="fas fa-check"></i> Activar
-                                    </button>
-                                </form>
+                                <% if (user && user.role === 'admin') { %>
+                                    <form action="/books/activate/<%= book.id_book %>" method="POST" class="inline">
+                                        <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded transition-colors">
+                                            <i class="fas fa-check"></i> Activar
+                                        </button>
+                                    </form>
+                                <% } %>
                             </td>
                         </tr>
                     <% }) %>

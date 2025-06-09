@@ -2,22 +2,30 @@ const Loan = require('../models/loan.model');
 const Book = require('../models/book.model');
 const User = require('../models/user.model');
 
-// Solicitar préstamo (usuario)
+// Procesa la solicitud de préstamo (usuario)
 exports.requestLoan = async (req, res) => {
     try {
-        const { id_book, due_date } = req.body;
         const user_id = req.session.user.id;
-        // Verificar disponibilidad del libro
-        const book = await Book.getById(id_book);
-        if (!book || book.stock < 1) {
-            return res.status(400).render('loans/add', { error: 'El libro no está disponible.', user: req.session.user, titulo: 'Solicitar préstamo' });
+        const { book_id, due_date } = req.body;
+        if (!book_id || !due_date) {
+            const books = await Book.getAllAvailable();
+            return res.status(400).render('loans/add', { books, user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo', error: 'Todos los campos son obligatorios.' });
         }
-        await Loan.create({ id_user: user_id, id_book, due_date });
-        await Book.decrementStock(id_book);
+        // Verificar que el usuario no tenga ya un préstamo activo de ese libro
+        const [rows] = await require('../database/connection').execute(
+            'SELECT * FROM loans WHERE id_user = ? AND id_book = ? AND status IN ("activo", "aprobado")',
+            [user_id, book_id]
+        );
+        if (rows.length > 0) {
+            const books = await Book.getAllAvailable();
+            return res.status(400).render('loans/add', { books, user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo', error: 'Ya tienes este libro prestado.' });
+        }
+        await Loan.create({ id_user: user_id, id_book: book_id, due_date });
         res.redirect('/loans/my');
     } catch (err) {
         console.error('Error en requestLoan:', err);
-        res.status(500).render('loans/add', { error: 'Error al solicitar préstamo.', user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo' });
+        const books = await Book.getAllAvailable();
+        res.status(500).render('loans/add', { books, user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo', error: 'Error al solicitar préstamo.' });
     }
 };
 
@@ -116,7 +124,7 @@ exports.addForm = async (req, res) => {
         res.render('loans/add', { books, user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo', error: null });
     } catch (err) {
         console.error('Error en addForm:', err);
-        res.status(500).render('loans/add', { error: 'Error al cargar libros.', user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo' });
+        res.status(500).render('loans/add', { books: [], user: req.session.user, titulo: 'Solicitar préstamo', pagina: 'Solicitar Préstamo', error: 'Error al cargar libros.' });
     }
 };
 

@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { isAdmin } = require('../middlewares/roles');
+const { isAdmin, isLibrarian } = require('../middlewares/roles');
+
+// Middleware combinado para admin o bibliotecario
+function isLibrarianOrAdmin(req, res, next) {
+    if (req.session && req.session.user && (req.session.user.role === 'admin' || req.session.user.role === 'librarian')) {
+        return next();
+    }
+    return res.status(403).render('unauthorized', { message: 'Acceso solo para administradores o bibliotecarios.', user: req.session.user, titulo: 'Acceso denegado' });
+}
 
 router.get('/', (req, res) => {
     res.render('index', { 
@@ -10,7 +18,15 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/dashboard', isAdmin, (req, res) => {
+// Middleware combinado para admin, bibliotecario o usuario normal
+function isAnyRole(req, res, next) {
+    if (req.session && req.session.user && ['admin', 'librarian', 'user'].includes(req.session.user.role)) {
+        return next();
+    }
+    return res.status(403).render('unauthorized', { message: 'Acceso solo para usuarios registrados.', user: req.session.user, titulo: 'Acceso denegado' });
+}
+
+router.get('/dashboard', isAnyRole, (req, res) => {
     res.render('dashboard', { 
         titulo: 'Dashboard',
         encabezado: 'Dashboard',

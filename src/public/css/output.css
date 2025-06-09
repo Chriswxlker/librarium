@@ -333,6 +333,9 @@
   .h-5 {
     height: calc(var(--spacing) * 5);
   }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
   .h-\[calc\(100\%-120px\)\] {
     height: calc(100% - 120px);
   }

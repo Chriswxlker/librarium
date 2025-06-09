@@ -27,7 +27,8 @@ const authController = {
             email: user.email,
             role: user.role
         };
-        res.redirect('/dashboard');
+        // Redirige siempre al dashboard, el contenido se adapta según el rol
+        return res.redirect('/dashboard');
     },
 
     // Cierra la sesión

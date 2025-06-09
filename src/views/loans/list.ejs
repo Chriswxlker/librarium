@@ -62,29 +62,31 @@
                             </td>
                             <td class="py-4 px-4">
                                 <div class="flex justify-end gap-2">
-                                    <a href="/loans/edit/<%= loan.id || loan.id_loan %>" class="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </a>
-                                    <% if (loan.status === 'pending') { %>
-                                        <form action="/loans/<%= loan.id %>/status" method="POST" class="inline-block">
-                                            <input type="hidden" name="status" value="approved">
-                                            <button class="inline-flex items-center gap-1 bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
-                                                <i class="fas fa-check"></i> Aprobar
-                                            </button>
-                                        </form>
-                                        <form action="/loans/<%= loan.id %>/status" method="POST" class="inline-block">
-                                            <input type="hidden" name="status" value="rejected">
-                                            <button class="inline-flex items-center gap-1 bg-red-600 hover:bg-red-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
-                                                <i class="fas fa-times"></i> Rechazar
-                                            </button>
-                                        </form>
-                                    <% } %>
-                                    <% if (loan.status === 'approved') { %>
-                                        <form action="/loans/<%= loan.id %>/return" method="POST" class="inline-block">
-                                            <button class="inline-flex items-center gap-1 bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
-                                                <i class="fas fa-check"></i> Marcar como entregado
-                                            </button>
-                                        </form>
+                                    <% if (user && (user.role === 'admin' || user.role === 'librarian')) { %>
+                                        <a href="/loans/edit/<%= loan.id || loan.id_loan %>" class="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                        <% if (loan.status === 'pending') { %>
+                                            <form action="/loans/<%= loan.id %>/status" method="POST" class="inline-block">
+                                                <input type="hidden" name="status" value="approved">
+                                                <button class="inline-flex items-center gap-1 bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                                    <i class="fas fa-check"></i> Aprobar
+                                                </button>
+                                            </form>
+                                            <form action="/loans/<%= loan.id %>/status" method="POST" class="inline-block">
+                                                <input type="hidden" name="status" value="rejected">
+                                                <button class="inline-flex items-center gap-1 bg-red-600 hover:bg-red-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                                    <i class="fas fa-times"></i> Rechazar
+                                                </button>
+                                            </form>
+                                        <% } %>
+                                        <% if (loan.status === 'approved') { %>
+                                            <form action="/loans/<%= loan.id %>/return" method="POST" class="inline-block">
+                                                <button class="inline-flex items-center gap-1 bg-green-600 hover:bg-green-500 text-white font-medium py-1.5 px-3 rounded-md transition-colors duration-300 text-sm">
+                                                    <i class="fas fa-check"></i> Marcar como entregado
+                                                </button>
+                                            </form>
+                                        <% } %>
                                     <% } %>
                                 </div>
                             </td>

@@ -12,12 +12,11 @@
                 Mostrando <%= books.length %> libros
             </div>
             <div class="flex gap-3">
-                <a href="/books/inactive" class="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors duration-300">
-                    <i class="fas fa-book-dead"></i> Recuperar
-                </a>
-                <a href="/books/add" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">
-                    <i class="fas fa-plus"></i> Agregar libro
-                </a>
+                <% if (user && (user.role === 'admin' || user.role === 'librarian')) { %>
+                    <a href="/books/add" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors duration-300 shadow-md hover:shadow-teal-500/30">
+                        <i class="fas fa-plus"></i> Agregar libro
+                    </a>
+                <% } %>
             </div>
         </div>
         <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg overflow-x-auto">
@@ -47,14 +46,18 @@
                             <td class="py-2 px-4"><%= book.year_published %></td>
                             <td class="py-2 px-4"><%= book.stock %></td>
                             <td class="py-2 px-4 flex gap-2">
-                                <a href="/books/edit/<%= book.id_book %>" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded transition-colors">
-                                    <i class="fas fa-edit"></i> Editar
-                                </a>
-                                <form action="/books/deactivate/<%= book.id_book %>" method="POST" class="inline">
-                                    <button type="submit" class="bg-gray-700 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors">
-                                        <i class="fas fa-trash-alt"></i> Desactivar
-                                    </button>
-                                </form>
+                                <% if (user && (user.role === 'admin' || user.role === 'librarian')) { %>
+                                    <a href="/books/edit/<%= book.id_book %>" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded transition-colors">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                <% } %>
+                                <% if (user && user.role === 'admin') { %>
+                                    <form action="/books/deactivate/<%= book.id_book %>" method="POST" class="inline">
+                                        <button type="submit" class="bg-gray-700 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors">
+                                            <i class="fas fa-trash-alt"></i> Desactivar
+                                        </button>
+                                    </form>
+                                <% } %>
                             </td>
                         </tr>
                     <% }) %>
